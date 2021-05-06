@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+<p>Найдено: {{ filterset.qs|length }}</p>
+<p>Всего наименований: {{ all_stuff|length }}</p>
+<p>Пагинатор настроен на: {{ paginate }} страницы</p>
+
+<form method="GET">
+    {{ filterset.form.as_p }} <!-- Форму от фильтров за нас сделает django. А вот кнопку, увы придётся делать самому -->
+    <input type="submit" value="Найти">
+</form><br>
+
+<table border=1>
+    {% for i in object_list %}
+        <tr><td>{{ i.name }}</td></tr>
+    {% endfor %}
+</table><br>
+
+{% load my_tags %}
+{% comment %} подгружаем tamplate tags для правильной генерации ссылок. До этого мы создали файлы в папке templatetags {% endcomment %}
+
+{% if is_paginated %}
+  {% if page_obj.has_previous %}
+    <a href="?{% param_replace page=1 %}"><<</a>
+    {% if page_obj.previous_page_number != 1 %}
+      <a href="?{% param_replace page=page_obj.previous_page_number %}"><</a>
+    {% endif %}
+  {% endif %}
+
+  {{ page_obj.number }} из {{ paginator.num_pages }}
+
+  {% if page_obj.has_next %}
+    {% if page_obj.next_page_number != paginator.num_pages %}
+      <a href="?{% param_replace page=page_obj.next_page_number %}">></a>
+    {% endif %}
+    <a href="?{% param_replace page=paginator.num_pages %}">>></a>
+  {% endif %}
+
+  <p>Objects {{ page_obj.start_index }}—{{ page_obj.end_index }}</p>
+{% endif %}
+
+
+</body>
+
+</html>
