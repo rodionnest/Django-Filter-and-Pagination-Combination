@@ -19,9 +19,6 @@ class FilteredListView(ListView):
     template_name = 'mainapp/main.html'
     filterset_class = None  #  переменная в последующем будет включать в себя класс фильтра
 
-    model = Stuff
-    fields = ['name']
-
     def get_queryset(self):
         #  Получаем queryset
         queryset = super().get_queryset()
